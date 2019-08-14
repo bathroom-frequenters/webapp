@@ -1,4 +1,9 @@
 export type AvailabilityRecord = {
     available: boolean;
-    timestamp: string;
+    time: string;
+}
+
+export enum ConnectionStatus {
+    CONNECTED,
+    DISCONNECTED,
 }

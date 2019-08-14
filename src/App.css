@@ -4,5 +4,19 @@
 
 .my-main-row {
   margin-top: 1rem;
+  display: flex;
   align-items: center;
+  min-height: 80vh;
+}
+
+.connected-status {
+  display: flex;
+}
+
+.connected-status-message {
+  margin-right: 0.25rem;
+}
+
+.no-data-available-alert {
+  margin: auto;
 }

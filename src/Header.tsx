@@ -1,12 +1,13 @@
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faWifi } from "@fortawesome/free-solid-svg-icons";
+import { ConnectionStatus } from "./types";
 
 type Props = {
-    wsConnected: boolean;
+    wsStatus: ConnectionStatus;
 }
 
-const Header = ({wsConnected}: Props) => (
+const Header = ({ wsStatus }: Props) => (
     <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
             <a className="navbar-item" href="/">
@@ -30,25 +31,31 @@ const Header = ({wsConnected}: Props) => (
             <div className="navbar-end">
                 <div className="navbar-item">
                     <div className="connected-status">
-                        {wsConnected ? (
-                            <>
-                                <span>
+                        {
+                            wsStatus === ConnectionStatus.CONNECTED && (
+                                <>
+                                <span className="connected-status-message">
                                     Connected
                                 </span>
-                                <span className="icon">
-                                <FontAwesomeIcon icon={faWifi}/>
+                                    <span className="icon">
+                                    <FontAwesomeIcon icon={faWifi}/>
                                 </span>
-                            </>
-                        ) : (
-                            <>
-                                 <span>
+                                </>
+                            )
+                        }
+
+                        {
+                            wsStatus === ConnectionStatus.DISCONNECTED && (
+                                <>
+                                <span className="connected-status-message">
                                     Disconnected
                                 </span>
-                                <span className="icon">
+                                    <span className="icon">
                                     <FontAwesomeIcon icon={faBan}/>
                                 </span>
-                            </>
-                        )}
+                                </>
+                            )
+                        }
                     </div>
                 </div>
             </div>

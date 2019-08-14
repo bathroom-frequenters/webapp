@@ -1,19 +1,21 @@
 import React from "react";
 import { AvailabilityRecord } from "./types";
 
+import TimeCounter from "./TimeCounter";
+
 type Props = {
     availability: AvailabilityRecord;
 }
 
 const CurrentAvailability = ({availability}: Props) => (
-    <article className="message is-success">
+    <article className={`message ${availability.available ? 'is-success' : 'is-danger'}`}>
         <div className="message-header">
             <p>
-                Available
+                {availability.available ? 'Available' : 'Unavailable'}
             </p>
         </div>
         <div className="message-body">
-            Last updated 34 seconds ago.
+            <TimeCounter start={availability.time}/>
         </div>
     </article>
 );

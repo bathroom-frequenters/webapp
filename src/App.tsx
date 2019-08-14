@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import './App.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 import Header from './Header';
 import RecentAvailability from "./RecentAvailability";
@@ -9,25 +11,37 @@ import Footer from "./Footer";
 
 import useAvailability from "./useAvailability";
 
-const App: React.FC = () => {
-    const { data, loading, error, wsConnected } = useAvailability();
+import { ConnectionStatus } from "./types";
 
-    if (loading) {
+type WrapperProps = {
+    children: ReactNode;
+    wsStatus: ConnectionStatus;
+}
+const Wrapper = ({children, wsStatus}: WrapperProps) => (
+    <div className="container">
+        <Header wsStatus={wsStatus}/>
+        <div className="my-main-row">
+            {children}
+        </div>
+        <Footer/>
+    </div>
+);
+
+const App: React.FC = () => {
+    const { data, wsStatus, error } = useAvailability();
+
+    if (wsStatus === ConnectionStatus.DISCONNECTED) {
         return (
-            <div className="container">
-                <Header wsConnected={wsConnected}/>
-                <div className="my-main-row">
-                    <progress className="progress is-medium is-primary" max="100">15%</progress>
-                </div>
-                <Footer/>
-            </div>
+            <Wrapper wsStatus={wsStatus}>
+                <progress className="progress is-medium is-primary" max="100">15%</progress>
+            </Wrapper>
         );
     }
 
     if (error) {
         return (
             <div className="container">
-                <Header wsConnected={wsConnected}/>
+                <Header wsStatus={wsStatus}/>
                 <div className="my-main-row">
                     <article className="message is-danger">
                         <div className="message-header">
@@ -46,31 +60,32 @@ const App: React.FC = () => {
     }
 
     if (!data || 0 === data.length) {
-        if (error) {
-            return (
-                <div className="container">
-                    <Header wsConnected={wsConnected}/>
-                    <div className="my-main-row">
-                        <article className="message is-warning">
-                            <div className="message-header">
-                                <p>
-                                    Warning
-                                </p>
-                            </div>
-                            <div className="message-body">
-                                No data available.
-                            </div>
-                        </article>
-                    </div>
-                    <Footer/>
+        return (
+            <div className="container">
+                <Header wsStatus={wsStatus}/>
+                <div className="my-main-row">
+                    <article className="message is-warning no-data-available-alert">
+                        <div className="message-header">
+                            <p>
+                                Warning
+                            </p>
+                            <span className="icon">
+                                <FontAwesomeIcon icon={faExclamationTriangle}/>
+                            </span>
+                        </div>
+                        <div className="message-body">
+                            No data available.
+                        </div>
+                    </article>
                 </div>
-            );
-        }
+                <Footer/>
+            </div>
+        );
     }
 
     return (
         <div className="container">
-            <Header wsConnected={wsConnected}/>
+            <Header wsStatus={wsStatus}/>
             <div className="columns my-main-row">
                 <div className="column">
                     <RecentAvailability history={data}/>

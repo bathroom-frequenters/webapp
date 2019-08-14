@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { AvailabilityRecord, ConnectionStatus } from "./types";
+import { DataPackage, ConnectionStatus } from "./types";
 
 
 enum ActionType {
@@ -11,7 +11,7 @@ enum ActionType {
 
 type State = {
     wsStatus: ConnectionStatus;
-    data: AvailabilityRecord[];
+    data: DataPackage | null;
     error: Error | null;
 };
 
@@ -22,7 +22,7 @@ type Action = {
 
 const initialState: State = {
     wsStatus: ConnectionStatus.DISCONNECTED,
-    data: [],
+    data: null,
     error: null,
 };
 
@@ -98,7 +98,7 @@ const useAvailability = () => {
                 () => {
                     socket.send("SEND_DATA_PLZ_KTHXBAI");
                 },
-                10 * 1000, // 10 seconds
+                30 * 1000, // 30 seconds
             );
 
             return () => {

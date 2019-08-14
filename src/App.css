@@ -20,3 +20,14 @@
 .no-data-available-alert {
   margin: auto;
 }
+
+.recent-availability-panel {
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 40rem;
+}
+
+.current-availability-message {
+  width: 100%;
+  margin: 0.5rem;
+}

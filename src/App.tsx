@@ -5,7 +5,6 @@ import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 import Header from './Header';
 import RecentAvailability from "./RecentAvailability";
-import CurrentAvailability from "./CurrentAvailability";
 import AvailabilityStats from "./AvailabilityStats";
 import Footer from "./Footer";
 
@@ -59,7 +58,7 @@ const App: React.FC = () => {
         );
     }
 
-    if (!data || 0 === data.length) {
+    if (!data || 0 === data.recent.length) {
         return (
             <div className="container">
                 <Header wsStatus={wsStatus}/>
@@ -86,13 +85,8 @@ const App: React.FC = () => {
     return (
         <div className="container">
             <Header wsStatus={wsStatus}/>
-            <div className="columns my-main-row">
-                <div className="column">
-                    <RecentAvailability history={data}/>
-                </div>
-                <div className="column">
-                    <CurrentAvailability availability={data[0]}/>
-                </div>
+            <div className="my-main-row">
+                <RecentAvailability history={data.recent} latest={data.latest}/>
             </div>
             <AvailabilityStats/>
             <Footer/>

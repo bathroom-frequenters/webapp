@@ -7,3 +7,8 @@ export enum ConnectionStatus {
     CONNECTED,
     DISCONNECTED,
 }
+
+export type DataPackage = {
+    latest: AvailabilityRecord;
+    recent: AvailabilityRecord[];
+}

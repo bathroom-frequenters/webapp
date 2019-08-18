@@ -1,13 +1,14 @@
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faWifi } from "@fortawesome/free-solid-svg-icons";
+import { faRedo, faWifi } from "@fortawesome/free-solid-svg-icons";
 import { ConnectionStatus } from "./types";
 
 type Props = {
     wsStatus: ConnectionStatus;
+    connect?: () => void;
 }
 
-const Header = ({ wsStatus }: Props) => (
+const Header = ({ wsStatus, connect }: Props) => (
     <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
             <a className="navbar-item" href="/">
@@ -46,14 +47,14 @@ const Header = ({ wsStatus }: Props) => (
 
                         {
                             wsStatus === ConnectionStatus.DISCONNECTED && (
-                                <>
-                                <span className="connected-status-message">
-                                    Disconnected
-                                </span>
-                                    <span className="icon">
-                                    <FontAwesomeIcon icon={faBan}/>
-                                </span>
-                                </>
+                                <button className="button" onClick={connect}>
+                                    <span className="connected-status-message">
+                                        Disconnected
+                                    </span>
+                                        <span className="icon">
+                                        <FontAwesomeIcon icon={faRedo}/>
+                                    </span>
+                                </button>
                             )
                         }
                     </div>

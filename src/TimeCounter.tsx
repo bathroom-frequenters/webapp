@@ -6,6 +6,13 @@ type Props = {
     start: string;
 }
 
+const rfcToHuman = (rfc: string): string => {
+    // thanks to https://github.com/moment/moment/issues/4333#issuecomment-450423176
+    const startDatetime = moment(rfc, "YYYY-MM-DDTHH:mm:ssZ");
+    const elapsedDuration = duration(startDatetime.diff(moment()));
+    return elapsedDuration.humanize(true);
+};
+
 const TimeCounter = ({start}: Props) => {
     const [elapsed, setElapsed] = useState("...");
 
@@ -13,10 +20,7 @@ const TimeCounter = ({start}: Props) => {
         () => {
             const watchId = setInterval(
                 () => {
-                    // thanks to https://github.com/moment/moment/issues/4333#issuecomment-450423176
-                    const startDatetime = moment(start, "YYYY-MM-DDTHH:mm:ssZ");
-                    const elapsedDuration = duration(startDatetime.diff(moment()));
-                    setElapsed(elapsedDuration.humanize(true));
+                    setElapsed(rfcToHuman(start));
                 },
                 250,
             );

@@ -1,6 +1,5 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { DataPackage, ConnectionStatus } from "./types";
-
 
 enum ActionType {
     WS_CONNECT_SUCCESS,
@@ -55,10 +54,11 @@ const reducer = (state: State, action: Action): State => {
 
 const useAvailability = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [lastConnected, forceConnect] = useState(Date.now());
 
     useEffect(
         () => {
-            const socket = new WebSocket("ws://localhost:8000/ws/status");
+            const socket = new WebSocket(process.env.REACT_APP_API_URL!);
 
             socket.onopen = (evt) => {
                 dispatch({
@@ -106,10 +106,15 @@ const useAvailability = () => {
                 socket.close();
             };
         },
+        [lastConnected]
+    );
+
+    const connect = useCallback(
+        () => forceConnect(Date.now()),
         []
     );
 
-    return state;
+    return { ...state, connect };
 };
 
 export default useAvailability;

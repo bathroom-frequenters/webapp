@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { DataPackage, ConnectionStatus } from "./types";
 
 enum ActionType {
@@ -30,11 +30,13 @@ const reducer = (state: State, action: Action): State => {
         case ActionType.WS_CONNECT_SUCCESS:
             return {
                 ...state,
+                error: null,
                 wsStatus: ConnectionStatus.CONNECTED,
             };
         case ActionType.WS_DISCONNECT:
             return {
                 ...state,
+                error: new Error("Disconnected from server!"),
                 wsStatus: ConnectionStatus.DISCONNECTED,
             };
         case ActionType.SET_DATA:
@@ -54,9 +56,8 @@ const reducer = (state: State, action: Action): State => {
 
 const useAvailability = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    const [lastConnected, forceConnect] = useState(Date.now());
 
-    useEffect(
+    const connect = useCallback(
         () => {
             const socket = new WebSocket(process.env.REACT_APP_API_URL!);
 
@@ -91,7 +92,15 @@ const useAvailability = () => {
                     payload: null,
                 });
 
+                // Attempt to auto-reconnect
+                clearInterval(watchId);
+                socket.close();
 
+                // Wait for 5 seconds before reconnecting
+                setTimeout(
+                    () => connect(),
+                    5000
+                );
             };
 
             const watchId = setInterval(
@@ -106,15 +115,16 @@ const useAvailability = () => {
                 socket.close();
             };
         },
-        [lastConnected]
-    );
-
-    const connect = useCallback(
-        () => forceConnect(Date.now()),
         []
     );
 
-    return { ...state, connect };
+    // Create initial connection
+    useEffect(
+        () => connect(),
+        [connect]
+    );
+
+    return state;
 };
 
 export default useAvailability;

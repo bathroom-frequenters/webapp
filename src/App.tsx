@@ -14,11 +14,11 @@ import { ConnectionStatus } from "./types";
 type WrapperProps = {
     children: ReactNode;
     wsStatus: ConnectionStatus;
-    connect: () => void;
 }
-const Wrapper = ({ children, wsStatus, connect }: WrapperProps) => (
+
+const Wrapper = ({ children, wsStatus }: WrapperProps) => (
     <div className="container">
-        <Header wsStatus={wsStatus} connect={connect}/>
+        <Header wsStatus={wsStatus} />
         <div className="my-main-row">
             {children}
         </div>
@@ -27,11 +27,11 @@ const Wrapper = ({ children, wsStatus, connect }: WrapperProps) => (
 );
 
 const App: React.FC = () => {
-    const { data, wsStatus, error, connect } = useAvailability();
+    const { data, wsStatus, error } = useAvailability();
 
     if (error) {
         return (
-            <Wrapper connect={connect} wsStatus={wsStatus}>
+            <Wrapper wsStatus={wsStatus}>
                 <article className="message is-danger">
                     <div className="message-header">
                         <p>
@@ -48,7 +48,7 @@ const App: React.FC = () => {
 
     if (wsStatus === ConnectionStatus.DISCONNECTED) {
         return (
-            <Wrapper wsStatus={wsStatus} connect={connect}>
+            <Wrapper wsStatus={wsStatus}>
                 <progress className="progress is-medium is-primary" max="100">15%</progress>
             </Wrapper>
         );
@@ -56,7 +56,7 @@ const App: React.FC = () => {
 
     if (!data || 0 === data.recent.length) {
         return (
-            <Wrapper connect={connect} wsStatus={wsStatus}>
+            <Wrapper wsStatus={wsStatus}>
                 <article className="message is-warning no-data-available-alert">
                     <div className="message-header">
                         <p>
@@ -75,7 +75,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <Wrapper connect={connect} wsStatus={wsStatus}>
+        <Wrapper wsStatus={wsStatus}>
             <RecentAvailability history={data.recent} latest={data.latest}/>
         </Wrapper>
     );

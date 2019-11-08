@@ -10,10 +10,6 @@
   min-height: 80vh;
 }
 
-.connected-status {
-  display: flex;
-}
-
 .connected-status-message {
   margin-right: 0.25rem;
 }
@@ -30,4 +26,12 @@
 .current-availability-message {
   width: 100%;
   margin: 0.5rem;
+}
+
+.navbar-brand {
+  flex: 1;
+}
+
+.connected-status {
+  margin-left: auto;
 }
